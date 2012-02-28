@@ -173,6 +173,14 @@ Handle<Value> Execute(const Arguments& args)
   return scope.Close(Integer::NewFromUnsigned(r));
 }
 
+template <int action>
+Handle<Value> Pause(const Arguments& args)
+{
+  UNWRAP();
+  http_parser_pause(&self->parser_, action);
+  return Undefined();
+}
+
 Handle<Value> Rebind(const Arguments& args)
 {
   HandleScope scope;
@@ -238,6 +246,10 @@ extern "C" void init(Handle<Object> obj)
   proto->SetInternalFieldCount(1);
   proto->Set(String::New("execute"),
              FunctionTemplate::New(Execute)->GetFunction());
+  proto->Set(String::New("pause"),
+             FunctionTemplate::New(Pause<1>)->GetFunction());
+  proto->Set(String::New("unpause"),
+             FunctionTemplate::New(Pause<0>)->GetFunction());
   proto->Set(String::New("rebind"),
              FunctionTemplate::New(Rebind)->GetFunction());
   proto->Set(String::New("reset"),
