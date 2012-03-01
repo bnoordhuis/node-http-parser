@@ -269,6 +269,11 @@ extern "C" void init(Handle<Object> obj)
   HTTP_METHOD_MAP(X)
 #undef X
 
+#define X(code, msg) \
+  obj->Set(String::NewSymbol("E_" # code), Integer::New(HPE_##code));
+  HTTP_ERRNO_MAP(X)
+#undef X
+
   obj->Set(String::NewSymbol("Parser"), t->GetFunction());
   obj->Set(String::NewSymbol("HTTP_BOTH"), Integer::New(HTTP_BOTH));
   obj->Set(String::NewSymbol("HTTP_REQUEST"), Integer::New(HTTP_REQUEST));
